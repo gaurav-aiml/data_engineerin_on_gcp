@@ -10,4 +10,4 @@ gcloud dataproc clusters create batch-etl \
 --worker-machine-type n1-standard-2 \
 --worker-boot-disk-size 20 \
 --image-version 1.3-debian10 \
---optional-components ANACONDA,ZOOKEEPER,JUPYTER
+--optional-components ANACONDA,JUPYTER
