@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[4]:
+# In[16]:
 
 
 import pyspark
@@ -9,28 +9,35 @@ from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.conf import SparkConf
 from pyspark.sql.session import SparkSession
+from datetime import date
 
 
-# In[9]:
+# In[2]:
 
 
 # sc = SparkContext()
 spark = SparkSession(sc)
 
 
-# In[10]:
+# In[39]:
 
 
-flight_data = spark.read.json("gs://gmp-etl/json/2019-04-27.json")
+current_date = str(date.today())
 
 
-# In[11]:
+# In[21]:
+
+
+flight_data = spark.read.json("gs://gmp-etl/json/"+current_date+".json")
+
+
+# In[22]:
 
 
 flight_data.registerTempTable("flight_data") 
 
 
-# In[53]:
+# In[23]:
 
 
 base_query = """
@@ -42,13 +49,13 @@ base_query = """
              """
 
 
-# In[54]:
+# In[24]:
 
 
 spark.sql(base_query).show()
 
 
-# In[23]:
+# In[25]:
 
 
 query1 = """
@@ -63,7 +70,7 @@ query1 = """
          """
 
 
-# In[27]:
+# In[26]:
 
 
 query2 = """
@@ -79,7 +86,7 @@ query2 = """
         """
 
 
-# In[67]:
+# In[27]:
 
 
 query3 = """
@@ -104,26 +111,26 @@ query3 = """
          """
 
 
-# In[64]:
+# In[28]:
 
 
 flight_delay_by_airline = spark.sql(query1)
 
 
-# In[65]:
+# In[29]:
 
 
 flight_delay_by_route = spark.sql(query2)
 
 
-# In[68]:
+# In[30]:
 
 
 flight_delay_dist_cat = spark.sql(query3)
 flight_delay_dist_cat.registerTempTable("flight_delay_dist_cat")
 
 
-# In[70]:
+# In[46]:
 
 
 query4 = """
@@ -135,4 +142,22 @@ query4 = """
          order by distance_category
          """
 flight_delay_distance_cat = spark.sql(query4)
+
+
+# In[49]:
+
+
+#Variables for path names
+output_path = "gs://gmp-etl/flight_analysis_outputs/"+current_date
+output_delay_by_airline = output_path+"_delay_by_airline"
+output_delay_by_route = output_path+"_delay_by_route"
+output_delay_by_dist_cat = output_path+"_delay_by_dist_cat"
+
+
+# In[50]:
+
+
+flight_delay_by_airline.coalesce(1).write.format("json").save(output_delay_by_airline)
+flight_delay_by_route.coalesce(1).write.format("json").save(output_delay_by_route)
+flight_delay_distance_cat.coalesce(1).write.format("json").save(output_delay_by_dist_cat)
 
