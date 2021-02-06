@@ -1,3 +1,4 @@
+#Command to create a DataProc cluster to use SparkSQL
 gcloud dataproc clusters create batch-etl \
 --region us-central1 \
 --zone us-central1-a \
