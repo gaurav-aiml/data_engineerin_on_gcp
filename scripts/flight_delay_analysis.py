@@ -42,13 +42,14 @@ base_query = """
 
 query1 = """
          select
+             flight_date,
              airline_code,
-             AVG(arrival_delay) as avg_arrival_delay,
-             AVG(departure_delay) as avg_departure_delay
+             ROUND(AVG(arrival_delay),2) as avg_arrival_delay,
+             ROUND(AVG(departure_delay),2) as avg_departure_delay
         from
             flight_data
         group by
-            airline_code
+            airline_code, flight_date
          """
 
 
@@ -57,14 +58,15 @@ query1 = """
 
 query2 = """
          select 
+             flight_date,
              source_airport, 
              destination_airport,
-             AVG(arrival_delay) as avg_arrival_delay,
-             AVG(departure_delay) as avg_departure_delay
+             ROUND(AVG(arrival_delay),2) as avg_arrival_delay,
+             ROUND(AVG(departure_delay),2) as avg_departure_delay
         from 
              flight_data
         group by
-            source_airport, destination_airport
+            source_airport, destination_airport, flight_date
         """
 
 
@@ -92,8 +94,6 @@ query3 = """
 
 
 flight_delay_by_airline = spark.sql(query1)
-
-
 flight_delay_by_route = spark.sql(query2)
 
 
@@ -102,11 +102,13 @@ flight_delay_dist_cat.registerTempTable("flight_delay_dist_cat")
 
 
 query4 = """
-         select distance_category,
-         AVG(arrival_delay) as avg_arrival_delay,
-         AVG(departure_delay) as avg_departure_delay
+         select 
+         flight_date,
+         distance_category,
+         ROUND(AVG(arrival_delay),2) as avg_arrival_delay,
+         ROUND(AVG(departure_delay),2) as avg_departure_delay
          from flight_delay_dist_cat
-         group by distance_category 
+         group by distance_category,flight_date
          order by distance_category
          """
 flight_delay_distance_cat = spark.sql(query4)
@@ -120,4 +122,3 @@ output_delay_by_dist_cat = output_path+"_delay_by_dist_cat"
 flight_delay_by_airline.coalesce(1).write.format("json").save(output_delay_by_airline)
 flight_delay_by_route.coalesce(1).write.format("json").save(output_delay_by_route)
 flight_delay_distance_cat.coalesce(1).write.format("json").save(output_delay_by_dist_cat)
-
