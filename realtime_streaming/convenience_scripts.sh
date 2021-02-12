@@ -1,6 +1,6 @@
 gcloud dataproc jobs submit pyspark \
---properties ^#^spark.jars.packages=org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.0,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.1.0 \
-realtime_streaming/test_streaming.py \
+--properties ^#^spark.jars.packages=org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.0,org.apache.spark:spark-streaming-kafka-0-10-assembly_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.1.0 \
+realtime_streaming/streaming_window_analysis.py \
 --cluster spark-etl \
 --region us-central1
 
