@@ -9,7 +9,7 @@ gcloud dataproc clusters create spark-etl \
 --worker-machine-type n1-standard-2 \
 --worker-boot-disk-size 100 \
 --image-version 1.4-debian9  \
---optional-components ZOOKEEPER,JUPYTER &&
+--optional-components ZOOKEEPER,JUPYTER,ANACONDA &&
 
 gcloud dataproc clusters create hive-cluster \
 --region us-central1 \

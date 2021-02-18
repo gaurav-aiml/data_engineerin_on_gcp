@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FUNCTION="update_cart_window_analysis"
+FUNCTION="upload_hive_sql_to_bq"
 BUCKET="gs://gmp-etl"
 
 gcloud functions deploy ${FUNCTION} \

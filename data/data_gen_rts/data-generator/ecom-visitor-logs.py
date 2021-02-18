@@ -42,6 +42,7 @@ parser.add_argument("--log-format", "-l", dest='log_format', help="Log format, C
 parser.add_argument("--num", "-n", dest='num_lines', help="Number of lines to generate (0 for infinite)", type=int, default=1)
 parser.add_argument("--prefix", "-p", dest='file_prefix', help="Prefix the output file name", type=str)
 parser.add_argument("--sleep", "-s", help="Sleep this long between lines (in seconds)", default=0.0, type=float)
+parser.add_argument("--cluster", "-c", dest = "cluster", help="Cluster Name", default="spark-etl", type=str)
 
 args = parser.parse_args()
 
@@ -49,6 +50,7 @@ log_lines = args.num_lines
 file_prefix = args.file_prefix
 output_type = args.output_type
 log_format = args.log_format
+cluster_name = args.cluster
 
 faker = Faker()
 
@@ -126,5 +128,5 @@ while (flag):
     if args.sleep:
         time.sleep(args.sleep)
     else : 
-        time.sleep(2)
+        time.sleep(0.2)
         
